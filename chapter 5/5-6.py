@@ -10,43 +10,38 @@ def polyline(t, n, length, angle):
         t.fd(length)
         t.rt(angle)
 
-def koch(t, x):
-    '''
-    t.fd(x/3)
+def koch(t, x, n):
+    if n == 1:
+        t.fd(x)
+        t.lt(60)
+        t.fd(x)
+        t.rt(120)
+        t.fd(x)
+        t.lt(60)
+        t.fd(x)
+        return
+    koch(t, x/3, n - 1)
     t.lt(60)
-    t.fd(x/3)
+    koch(t, x/3, n - 1)
     t.rt(120)
-    t.fd(x/3)
+    koch(t, x/3, n - 1)
     t.lt(60)
-    t.fd(x/3)
+    koch(t, x/3, n - 1)
 
-    t.fd(x/3)
-    koch(t, x/3)
-    t.lt(60)
-    koch(t, x/3)
-    t.rt(120)
-    koch(t, x/3)
-    t.lt(60)
-    koch(t, x/3)
-    '''
     
 
-def snowflake(t, x):
-    polyline(t, 3, x, 60)
-    koch(t, x/3)
-    t.lt(60)
-    koch(t, x/3)
+def snowflake(t, x, n):
+    koch(t, x/3, n)
     t.rt(120)
-    koch(t, x/3)
-    t.lt(60)
-    koch(t, x/3)
-
-turtle.mainloop()
-
-
+    print("in")
+    koch(t, x/3, n)
+    t.rt(120)
+    koch(t, x/3, n)
+    t.rt(120)
 
 
 bob = turtle.Turtle()
-koch(bob, 300)
+#koch(bob, 200, 4)
+snowflake(bob, 200 , 3)
 
 turtle.mainloop()
