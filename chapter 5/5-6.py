@@ -1,15 +1,4 @@
 import turtle
-def polyline(t, n, length, angle):
-    """Draws n line segments.
-    t: Turtle object
-    n: number of line segments
-    length: length of each segment
-    angle: degrees between segments
-    """
-    for i in range(n):
-        t.fd(length)
-        t.rt(angle)
-
 def koch(t, x, n):
     if n == 1:
         t.fd(x)
