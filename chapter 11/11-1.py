@@ -1,13 +1,16 @@
-# def dictionary(f):
-#     d = dict()
-#     count = 0
-#     for line in f:
-#         d[count] = line
-#         count += 1
-#         print(d[count])
-    
+def dictionary(f):
+    d = dict()
+    count = 0
+    for line in f:
+        line = line.strip()
+        d[line] = count
+        count += 1
+    return d    
 
 
-# fin = open('test.txt')
-# print(dictionary(fin))
-print("hello world")
+fin = open('test.txt')
+
+d = dictionary(fin)
+print(d)
+# if 'retunes' in d:
+#     print(d['retuned'])
