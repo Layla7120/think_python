@@ -14,7 +14,7 @@ def make_word_dict():
 
 
 memo = {}
-memo[''] = ['']
+memo[''] = [''] # 공백 저장하기
 
 def children(s, wordlist):
     l = []
