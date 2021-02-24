@@ -23,7 +23,7 @@ def main():
     pattern = 'pattern'
     replace = 'replace'
     source = 'sed_tester.txt'
-    dest = source + '.replaced' # 이름을 이렇게 짓는다
+    dest = source + '.replaced' # 이름을 이렇게 짓는다 dest = destination
     sed(pattern, replace, source, dest)
 
 
