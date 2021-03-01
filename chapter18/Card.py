@@ -18,6 +18,7 @@ class Card:
     def __init__(self, suit=0, rank=2):
         self.suit = suit
         self.rank = rank
+        
 
     def __str__(self):
         """Returns a human-readable string representation."""
@@ -114,6 +115,7 @@ class Hand(Deck):
     def __init__(self, label=''):
         self.cards = []
         self.label = label
+        self.sf_memo = 0
 
 
 def find_defining_class(obj, method_name):

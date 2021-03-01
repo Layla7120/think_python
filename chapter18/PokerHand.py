@@ -56,15 +56,6 @@ class PokerHand(Hand):
     #     self.ranks = {}
     #     for card in self.cards:
     #         self.ranks[card.rank] = self.ranks.get(card.rank, 0) + 1
-
-    def has_flush(self):
-        """Returns True if the hand has a flush, False otherwise.
-        Note that this works correctly for hands with more than 5 cards.
-        """
-        for val in self.suit_hist.values():
-            if val >= 5:
-                return True
-        return False
     
     def has_pair(self):
         count = 0
@@ -85,17 +76,35 @@ class PokerHand(Hand):
         return False
 
     def has_triple(self):
-        """Returns True if the hand has a flush, False otherwise.
-      
-        Note that this works correctly for hands with more than 5 cards.
-        """
         for val in self.rank_hist.values():
             if val == 3:
                 return True
         return False
-     
+
+    def has_flush(self):
+        """Returns True if the hand has a flush, False otherwise.
+        Note that this works correctly for hands with more than 5 cards.
+        """
+        for val in self.suit_hist.values():
+            if val == 5:
+                return True
+        return False
+
+    def has_threekind(self):
+            for val in self.suit_hist.values():
+                if val == 3 :
+                    return True
+            return False
+
+    def has_fourkind(self):
+        for val in self.suit_hist.values():
+            if val == 4:
+                return True
+        return False
+
     def has_straight(self):
         self.key_list = []
+        
         for val in self.rank_hist.keys():
             self.key_list.append(val)
         self.key_list.sort()
@@ -103,33 +112,93 @@ class PokerHand(Hand):
         if len(self.key_list) < 5:
             # print("cut")
             return False
-        for a in range(len(self.key_list) - 5):
-            if (self.key_list[a] + 1) == self.key_list[a + 1]:
+
+        for a in range(len(self.key_list)):
+            if a  <= len(self.key_list) - 5:
+                count = 0
                 # print('in')
-                for b in range(a, a + 5):
+                for b in range(a, a + 4):
                     # print(a, self.key_list[b])
-                    if (self.key_list[b] + 1) != self.key_list[b + 1]:
-                        return False
+                    if (self.key_list[b] + 1) == self.key_list[b + 1]:
+                        count += 1
+                        # return False
+                # return True
+            if a > len(self.key_list) - 5:
+                count = 0
+                # print(a)
+                b = a - len(self.key_list) - 1
+                for num in range(5): 
+                    b += 1
+                    # print(a, self.key_list[b])
+                    if self.key_list[b] == 13 and self.key_list[b + 1] == 1:
+                        count += 1
+                        continue
+                    if (self.key_list[b] + 1) == self.key_list[b + 1]:
+                        count += 1
+                        # return False
+                    # print("count", count)
+            if count == 4:
                 return True
         return False
 
     def has_straightflush(self):
-        if self.has_straight and self.has_flush:
-            return True
-        return False
+        self.key_list = []
+        for val in self.rank_hist.keys():
+            self.key_list.append(val)
+        self.key_list.sort()
+        print(self.key_list)
 
-    def has_threekind(self):
-            for val in self.rank_hist.values():
-                if val == 4:
-                    return True
+        # print(self.key_list)
+        if len(self.key_list) < 5:
+            # print("cut")
             return False
 
-    def has_fourkind(self):
-        self.make_histograms()
-        for val in self.sets:
-            if val == 4:
-                return True
-        return False
+        for a in range(len(self.key_list)):
+            if a  <= len(self.key_list) - 5:
+                count = 0
+                # print('in')
+                for b in range(a, a + 4):
+                    # print(a, self.key_list[b])
+                    if (self.key_list[b] + 1) == self.key_list[b + 1]:
+                        count += 1
+                        # return False
+                # return True
+            if a > len(self.key_list) - 5:
+                count = 0
+                # print(a)
+                b = a - len(self.key_list) - 1
+                for num in range(5): 
+                    b += 1
+                    # print(a, self.key_list[b])
+                    if self.key_list[b] == 13 and self.key_list[b + 1] == 1:
+                        count += 1
+                        continue
+                    if (self.key_list[b] + 1) == self.key_list[b + 1]:
+                        count += 1
+                        # return False
+                    # print("count", count)
+            if count == 4:
+                self.sf_memo = str(self.key_list[a])
+                print("has straight")
+                keylocation= 0
+                suit_list = []
+                for c in self.cards:
+                    print(c.suit)
+                    suit_list.append(c.suit)
+                
+                match = 0
+                # print(keylocation,len(self.key_list))
+                if keylocation >= len(self.key_list) - 5:
+                    keylocation = a - len(self.key_list) - 1
+                # print(keylocation)
+                for c in range(4):
+                    if suit_list[keylocation] == suit_list[keylocation + 1]:
+                        match += 1
+                print(match)
+                if match == 4:
+                    print(True)
+                    return True
+            return False
 
     def has_fullhouse(self):
         if self.has_triple() and self.has_pair():
@@ -168,7 +237,7 @@ def main():
     lhist = Hist()
 
     # loop n times, dealing 7 hands per iteration, 7 cards each
-    n = 10000
+    n = 10
     for i in range(n):
         if i % 1000 == 0:
             print(i)
@@ -191,7 +260,50 @@ def main():
             continue
         p = total / freq
         print('%s happens one time in %.2f' % (label, p))
+    
+    '''has_straight() test code'''
+    '''
+    def has_straight():
+        key_list = [1, 6, 10, 11, 4, 12, 13]
+        key_list.sort()
+        # print(self.key_list)
+        if len(key_list) < 5:
+            print("cut")
+            return False
 
+        for a in range(len(key_list)):
+            if a  <= len(key_list) - 5:
+                count = 0
+                print('in')
+                for b in range(a, a + 4):
+                    print(a, key_list[b])
+                    # if key_list[b] == 13 and key_list[b + 1] == 1:
+                    #     continue
+                    if (key_list[b] + 1) == key_list[b + 1]:
+                        count += 1
+                        # return False
+                # return True
+            if a > len(key_list) - 5:
+                count = 0
+                print(a)
+                b = a - len(key_list) - 1
+                for num in range(5): 
+                    b += 1
+                    print(a, key_list[b])
+                    if key_list[b] == 13 and key_list[b + 1] == 1:
+                        count += 1
+                        continue
+                    if (key_list[b] + 1) == key_list[b + 1]:
+                        count += 1
+                        # return False
+                    print("count", count)
+            if count == 4:
+                self.sf_memo = a
+        #         return True
+        # return False
+        print()
+    print(has_straight())
+    '''
         
 if __name__ == '__main__':
     main()
